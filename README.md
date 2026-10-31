@@ -130,3 +130,15 @@ GitHub: [@Yash0029](https://github.com/Yash0029)
 ---
 
 *InvenTrack – Simplifying Inventory Management.*
+
+
+⚠️ Important Notice – Live Demo Temporarily Unavailable
+
+Please Note: The live deployment of InvenTrack is temporarily unavailable due to a service disruption with the hosting platform.
+
+The application source code, features, and project documentation are still available in this repository. The live demo will be restored once the hosting platform becomes stable and deployment is resumed.
+
+Current Status: 🔴 Temporarily Offline
+Deployment Status: Pending Restoration
+
+Thank you for your understanding.
