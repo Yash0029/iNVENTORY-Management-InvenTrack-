@@ -1,0 +1,19 @@
+.DS_Store
+**/node_modules/
+**/dist/
+**/target/
+**/.angular/
+.env
+
+# Environment files
+.env.*
+!.env.example
+
+# Local database configuration
+**/application-local.properties
+
+# Build files
+**/build/
+
+# macOS
+.DS_Store

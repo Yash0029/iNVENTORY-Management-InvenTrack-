@@ -1,0 +1,98 @@
+package com.inventory.inventory_backend.controller;
+
+import com.inventory.inventory_backend.entity.Fulfillment;
+import com.inventory.inventory_backend.repository.FulfillmentRepository;
+import com.inventory.inventory_backend.service.FulfillmentService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/fulfillments")
+@CrossOrigin(origins = "http://localhost:4200")
+public class FulfillmentController {
+
+    private final FulfillmentRepository fulfillmentRepository;
+    private final FulfillmentService fulfillmentService;
+
+    public FulfillmentController(
+            FulfillmentRepository fulfillmentRepository, FulfillmentService fulfillmentService) {
+        this.fulfillmentRepository = fulfillmentRepository;
+        this.fulfillmentService = fulfillmentService;
+    }
+
+    @GetMapping
+    public List<Fulfillment> getAllFulfillments() {
+        return fulfillmentRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Fulfillment> getFulfillmentById(
+            @PathVariable Long id) {
+
+        Optional<Fulfillment> fulfillment =
+                fulfillmentRepository.findById(id);
+
+        if (fulfillment.isPresent()) {
+            return ResponseEntity.ok(fulfillment.get());
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    public Fulfillment createFulfillment(
+            @Valid @RequestBody Fulfillment fulfillment) {
+
+        fulfillmentService.validate(fulfillment);
+        return fulfillmentRepository.save(fulfillment);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Fulfillment> updateFulfillment(
+            @PathVariable Long id,
+            @RequestBody Fulfillment fulfillmentDetails) {
+
+        Optional<Fulfillment> existingFulfillment =
+                fulfillmentRepository.findById(id);
+
+        if (existingFulfillment.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Fulfillment fulfillment =
+                existingFulfillment.get();
+
+        fulfillment.setOrderId(
+                fulfillmentDetails.getOrderId());
+
+        fulfillment.setStatus(
+                fulfillmentDetails.getStatus());
+
+        fulfillment.setAssignedTo(
+                fulfillmentDetails.getAssignedTo());
+
+        fulfillmentService.validate(fulfillment);
+
+        Fulfillment updatedFulfillment =
+                fulfillmentRepository.save(fulfillment);
+
+        return ResponseEntity.ok(updatedFulfillment);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFulfillment(
+            @PathVariable Long id) {
+
+        if (!fulfillmentRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        fulfillmentRepository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+}

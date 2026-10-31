@@ -1,0 +1,315 @@
+<div class="warehouses-page">
+
+  <div class="page-header">
+
+    <div>
+      <div class="eyebrow">LOCATION MANAGEMENT</div>
+
+      <h1>Warehouses</h1>
+
+      <p>
+        Manage storage locations and warehouse managers
+      </p>
+    </div>
+
+    <button
+      class="add-button"
+      (click)="openAddForm()"
+    >
+      + Add Warehouse
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>Warehouse Directory</h2>
+
+        <p>
+          All warehouses registered in your system
+        </p>
+      </div>
+
+      <button
+        class="small-add-button"
+        (click)="openAddForm()"
+      >
+        + New Warehouse
+      </button>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      *ngIf="loading"
+      class="message"
+    >
+
+      <div class="loader"></div>
+
+      <p>Loading warehouses...</p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      *ngIf="!loading && error"
+      class="error"
+    >
+      {{ error }}
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      *ngIf="
+        !loading &&
+        !error &&
+        warehouses.length === 0
+      "
+      class="message"
+    >
+
+      <div class="empty-icon">
+        ◫
+      </div>
+
+      <h3>No warehouses yet</h3>
+
+      <p>
+        Add your first warehouse to the system.
+      </p>
+
+      <button
+        class="small-add-button"
+        (click)="openAddForm()"
+      >
+        + Add Warehouse
+      </button>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div
+      class="table-container"
+      *ngIf="
+        !loading &&
+        !error &&
+        warehouses.length > 0
+      "
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>ID</th>
+            <th>WAREHOUSE</th>
+            <th>LOCATION</th>
+            <th>MANAGER</th>
+            <th>ACTIONS</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let warehouse of warehouses"
+          >
+
+            <td>
+              #{{ warehouse.id }}
+            </td>
+
+            <td>
+
+              <div class="warehouse-name">
+
+                <div class="warehouse-icon">
+                  ◫
+                </div>
+
+                <strong>
+                  {{ warehouse.name }}
+                </strong>
+
+              </div>
+
+            </td>
+
+            <td>
+              {{ warehouse.location || '—' }}
+            </td>
+
+            <td>
+              {{ warehouse.manager || '—' }}
+            </td>
+
+            <td>
+
+              <div class="actions">
+
+                <button
+                  class="edit-button"
+                  (click)="openEditForm(warehouse)"
+                >
+                  Edit
+                </button>
+
+                <button
+                  class="delete-button"
+                  (click)="deleteWarehouse(warehouse.id)"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showForm"
+  (click)="closeForm()"
+>
+
+  <div
+    class="modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <div class="eyebrow">
+          WAREHOUSE MANAGEMENT
+        </div>
+
+        <h2>
+          {{ editing
+            ? 'Edit Warehouse'
+            : 'Add Warehouse'
+          }}
+        </h2>
+
+      </div>
+
+      <button
+        class="close-button"
+        (click)="closeForm()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form
+      (ngSubmit)="saveWarehouse()"
+    >
+
+      <div class="form-group">
+
+        <label>
+          Warehouse Name *
+        </label>
+
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="warehouse.name"
+          placeholder="Enter warehouse name"
+          required
+        />
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Location
+        </label>
+
+        <input
+          type="text"
+          name="location"
+          [(ngModel)]="warehouse.location"
+          placeholder="Enter warehouse location"
+        />
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Manager
+        </label>
+
+        <input
+          type="text"
+          name="manager"
+          [(ngModel)]="warehouse.manager"
+          placeholder="Enter manager name"
+        />
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeForm()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+        >
+          {{ editing
+            ? 'Update Warehouse'
+            : 'Create Warehouse'
+          }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

@@ -1,0 +1,351 @@
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+  
+      <div>
+        <div class="eyebrow">OVERVIEW</div>
+  
+        <h1>Good morning, Yash 👋</h1>
+  
+        <p>
+          Here's what's happening across your inventory today.
+        </p>
+      </div>
+  
+      <button class="date-button">
+        ◷ Today
+      </button>
+  
+    </div>
+  
+  
+    <!-- Statistics -->
+  
+    <div class="stats-grid">
+  
+      <div
+        class="stat-card glass"
+        *ngFor="let stat of stats"
+      >
+  
+        <div class="stat-top">
+  
+          <div class="stat-icon">
+            {{ stat.icon }}
+          </div>
+  
+          <span class="growth">
+            {{ stat.change }}
+          </span>
+  
+        </div>
+  
+        <span class="stat-title">
+          {{ stat.title }}
+        </span>
+  
+        <strong class="stat-value">
+          {{ stat.value }}
+        </strong>
+  
+      </div>
+  
+    </div>
+  
+  
+    <!-- Dashboard content -->
+  
+    <div class="dashboard-grid">
+  
+  
+      <!-- Inventory Overview -->
+  
+      <div class="glass chart-card">
+  
+        <div class="card-header">
+  
+          <div>
+            <h2>Inventory Overview</h2>
+  
+            <p>
+              Stock movement over the last 7 days
+            </p>
+          </div>
+  
+          <button class="period-button">
+            Last 7 days ▾
+          </button>
+  
+        </div>
+  
+  
+        <div class="chart">
+  
+          <div class="chart-y">
+            <span>100</span>
+            <span>75</span>
+            <span>50</span>
+            <span>25</span>
+            <span>0</span>
+          </div>
+  
+  
+          <div class="chart-area">
+  
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+  
+  
+            <div class="bars">
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:52%"></div>
+                <div class="bar bar-b" style="height:35%"></div>
+              </div>
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:68%"></div>
+                <div class="bar bar-b" style="height:45%"></div>
+              </div>
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:48%"></div>
+                <div class="bar bar-b" style="height:62%"></div>
+              </div>
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:78%"></div>
+                <div class="bar bar-b" style="height:50%"></div>
+              </div>
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:60%"></div>
+                <div class="bar bar-b" style="height:75%"></div>
+              </div>
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:85%"></div>
+                <div class="bar bar-b" style="height:58%"></div>
+              </div>
+  
+              <div class="bar-group">
+                <div class="bar bar-a" style="height:72%"></div>
+                <div class="bar bar-b" style="height:88%"></div>
+              </div>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+  
+        <div class="chart-labels">
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+          <span>Sun</span>
+        </div>
+  
+      </div>
+  
+  
+      <!-- Warehouse -->
+  
+      <div class="glass warehouse-card">
+  
+        <div class="card-header">
+  
+          <div>
+            <h2>Warehouse Stock</h2>
+            <p>Current distribution</p>
+          </div>
+  
+          <span class="more-button">•••</span>
+  
+        </div>
+  
+  
+        <div class="warehouse-circle">
+  
+          <div class="circle-inner">
+            <strong>{{ totalUnits }}</strong>
+            <span>Units</span>
+          </div>
+  
+        </div>
+  
+  
+        <div class="warehouse-list">
+  
+          <div class="warehouse-row" *ngFor="let warehouse of warehouseStock">
+            <span>
+              <i class="dot blue"></i>
+              {{ warehouse.name }}
+            </span>
+  
+            <strong>{{ warehouse.quantity }}</strong>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+  
+      <!-- Recent Orders -->
+  
+      <div class="glass orders-card">
+  
+        <div class="card-header">
+  
+          <div>
+            <h2>Recent Orders</h2>
+            <p>Latest customer orders</p>
+          </div>
+  
+          <a routerLink="/orders">
+            View all →
+          </a>
+  
+        </div>
+  
+  
+        <div class="orders-table">
+  
+          <div class="order-row header">
+            <span>ORDER</span>
+            <span>CUSTOMER</span>
+            <span>AMOUNT</span>
+            <span>STATUS</span>
+          </div>
+  
+  
+          <div
+            class="order-row"
+            *ngFor="let order of recentOrders"
+          >
+  
+            <strong>{{ order.id }}</strong>
+  
+            <span>{{ order.customer }}</span>
+  
+            <strong>{{ order.amount }}</strong>
+  
+            <span
+              class="order-status"
+              [class.processing]="order.status === 'Processing'"
+              [class.shipped]="order.status === 'Shipped'"
+              [class.delivered]="order.status === 'Delivered'"
+            >
+              {{ order.status }}
+            </span>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+  
+      <!-- Low Stock -->
+  
+      <div class="glass low-stock-card">
+  
+        <div class="card-header">
+  
+          <div>
+            <h2>Low Stock Alerts</h2>
+            <p>Products that need attention</p>
+          </div>
+  
+          <span class="warning-count">
+            {{ lowStock.length }}
+          </span>
+  
+        </div>
+  
+  
+        <div class="low-stock-list">
+  
+          <div
+            class="low-stock-row"
+            *ngFor="let item of lowStock"
+          >
+  
+            <div class="product-mini">
+  
+              <div class="mini-product-icon">
+                {{ item.product.charAt(0) }}
+              </div>
+  
+              <div>
+                <strong>{{ item.product }}</strong>
+                <span>{{ item.sku }}</span>
+              </div>
+  
+            </div>
+  
+  
+            <div class="stock-warning">
+              <strong>{{ item.stock }}</strong>
+              <span>/ {{ item.minimum }}</span>
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  
+    <!-- Quick Actions -->
+  
+    <div class="glass quick-actions">
+  
+      <div>
+        <h2>Quick Actions</h2>
+  
+        <p>
+          Frequently used inventory operations
+        </p>
+      </div>
+  
+  
+      <div class="quick-buttons">
+  
+        <a
+          routerLink="/products"
+          class="quick-button blue"
+        >
+          <span>+</span>
+          Add Product
+        </a>
+  
+        <a
+          routerLink="/orders"
+          class="quick-button purple"
+        >
+          <span>+</span>
+          Create Order
+        </a>
+  
+        <a
+          routerLink="/products"
+          class="quick-button cyan"
+        >
+          <span>+</span>
+          Manage Products
+        </a>
+  
+      </div>
+  
+    </div>
+  
+  </div>

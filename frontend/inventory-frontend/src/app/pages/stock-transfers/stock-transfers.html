@@ -1,0 +1,245 @@
+<div class="page-container">
+
+    <div class="page-header">
+      <div>
+        <h1>Stock Transfers</h1>
+        <p>Transfer inventory between warehouses.</p>
+      </div>
+  
+      <button class="primary-button" (click)="openAddForm()">
+        + New Transfer
+      </button>
+    </div>
+  
+    <div class="glass-card table-card">
+  
+      <div *ngIf="loading" class="state-message">
+        Loading stock transfers...
+      </div>
+  
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+  
+      <div
+        *ngIf="!loading && !error && transfers.length === 0"
+        class="state-message"
+      >
+        No stock transfers found.
+      </div>
+  
+      <div
+        *ngIf="!loading && transfers.length > 0"
+        class="table-wrapper"
+      >
+        <table>
+  
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product ID</th>
+              <th>From Warehouse</th>
+              <th>To Warehouse</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+  
+          <tbody>
+            <tr *ngFor="let transfer of transfers">
+  
+              <td>#{{ transfer.id }}</td>
+  
+              <td>
+                <span class="id-badge">
+                  {{ transfer.productId }}
+                </span>
+              </td>
+  
+              <td>
+                Warehouse #{{ transfer.fromWarehouseId }}
+              </td>
+  
+              <td>
+                Warehouse #{{ transfer.toWarehouseId }}
+              </td>
+  
+              <td>
+                <strong>{{ transfer.quantity }}</strong>
+              </td>
+  
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusClass(transfer.status)"
+                >
+                  {{ transfer.status }}
+                </span>
+              </td>
+  
+              <td>
+                <div class="action-buttons">
+  
+                  <button
+                    class="edit-button"
+                    (click)="openEditForm(transfer)"
+                  >
+                    Edit
+                  </button>
+  
+                  <button
+                    class="delete-button"
+                    (click)="deleteTransfer(transfer.id)"
+                  >
+                    Delete
+                  </button>
+  
+                </div>
+              </td>
+  
+            </tr>
+          </tbody>
+  
+        </table>
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  
+  <!-- ADD / EDIT FORM -->
+  
+  <div
+    class="modal-overlay"
+    *ngIf="showForm"
+    (click)="closeForm()"
+  >
+    <div
+      class="modal-card"
+      (click)="$event.stopPropagation()"
+    >
+  
+      <div class="modal-header">
+  
+        <div>
+          <h2>
+            {{ editing ? 'Edit Stock Transfer' : 'New Stock Transfer' }}
+          </h2>
+  
+          <p>
+            {{ editing
+              ? 'Update transfer details.'
+              : 'Create a new inventory transfer.'
+            }}
+          </p>
+        </div>
+  
+        <button
+          class="close-button"
+          (click)="closeForm()"
+        >
+          ×
+        </button>
+  
+      </div>
+  
+  
+      <div class="form-grid">
+  
+        <div class="form-group">
+          <label>Product ID</label>
+  
+          <input
+            type="number"
+            [(ngModel)]="transfer.productId"
+            min="1"
+            placeholder="Enter product ID"
+          />
+        </div>
+  
+  
+        <div class="form-group">
+          <label>Quantity</label>
+  
+          <input
+            type="number"
+            [(ngModel)]="transfer.quantity"
+            min="1"
+            placeholder="Enter quantity"
+          />
+        </div>
+  
+  
+        <div class="form-group">
+          <label>From Warehouse ID</label>
+  
+          <input
+            type="number"
+            [(ngModel)]="transfer.fromWarehouseId"
+            min="1"
+            placeholder="Source warehouse ID"
+          />
+        </div>
+  
+  
+        <div class="form-group">
+          <label>To Warehouse ID</label>
+  
+          <input
+            type="number"
+            [(ngModel)]="transfer.toWarehouseId"
+            min="1"
+            placeholder="Destination warehouse ID"
+          />
+        </div>
+  
+  
+        <div class="form-group full-width">
+          <label>Status</label>
+  
+          <select [(ngModel)]="transfer.status">
+  
+            <option value="Pending">
+              Pending
+            </option>
+  
+            <option value="Processing">
+              Processing
+            </option>
+  
+            <option value="Completed">
+              Completed
+            </option>
+  
+            <option value="Cancelled">
+              Cancelled
+            </option>
+  
+          </select>
+        </div>
+  
+      </div>
+  
+  
+      <div class="modal-actions">
+  
+        <button
+          class="secondary-button"
+          (click)="closeForm()"
+        >
+          Cancel
+        </button>
+  
+        <button
+          class="primary-button"
+          (click)="saveTransfer()"
+        >
+          {{ editing ? 'Update Transfer' : 'Create Transfer' }}
+        </button>
+  
+      </div>
+  
+    </div>
+  </div>

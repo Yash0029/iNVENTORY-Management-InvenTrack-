@@ -1,0 +1,383 @@
+<div class="inventory-page">
+
+    <!-- HEADER -->
+  
+    <div class="page-header">
+  
+      <div>
+        <div class="eyebrow">
+          INVENTORY MANAGEMENT
+        </div>
+  
+        <h1>Inventory</h1>
+  
+        <p>
+          Monitor stock levels across your warehouses
+        </p>
+      </div>
+  
+      <button
+        class="add-button"
+        (click)="openAddForm()"
+      >
+        + Add Inventory
+      </button>
+  
+    </div>
+  
+  
+    <!-- INVENTORY CARD -->
+  
+    <div class="card">
+  
+      <div class="card-header">
+  
+        <div>
+          <h2>Inventory Overview</h2>
+  
+          <p>
+            Current stock available in your warehouses
+          </p>
+        </div>
+  
+        <button
+          class="small-add-button"
+          (click)="openAddForm()"
+        >
+          + New Record
+        </button>
+  
+      </div>
+  
+  
+      <!-- LOADING -->
+  
+      <div
+        *ngIf="loading"
+        class="message"
+      >
+  
+        <div class="loader"></div>
+  
+        <p>
+          Loading inventory...
+        </p>
+  
+      </div>
+  
+  
+      <!-- ERROR -->
+  
+      <div
+        *ngIf="!loading && error"
+        class="error"
+      >
+        {{ error }}
+      </div>
+  
+  
+      <!-- EMPTY -->
+  
+      <div
+        *ngIf="
+          !loading &&
+          !error &&
+          inventory.length === 0
+        "
+        class="message"
+      >
+  
+        <div class="empty-icon">
+          📦
+        </div>
+  
+        <h3>
+          No inventory records
+        </h3>
+  
+        <p>
+          Add your first inventory record.
+        </p>
+  
+        <button
+          class="small-add-button"
+          (click)="openAddForm()"
+        >
+          + Add Inventory
+        </button>
+  
+      </div>
+  
+  
+      <!-- TABLE -->
+  
+      <div
+        class="table-container"
+        *ngIf="
+          !loading &&
+          !error &&
+          inventory.length > 0
+        "
+      >
+  
+        <table>
+  
+          <thead>
+  
+            <tr>
+  
+              <th>ID</th>
+  
+              <th>PRODUCT ID</th>
+  
+              <th>WAREHOUSE ID</th>
+  
+              <th>QUANTITY</th>
+  
+              <th>MINIMUM STOCK</th>
+  
+              <th>STATUS</th>
+  
+              <th>ACTIONS</th>
+  
+            </tr>
+  
+          </thead>
+  
+          <tbody>
+  
+            <tr
+              *ngFor="let item of inventory"
+            >
+  
+              <td>
+                #{{ item.id }}
+              </td>
+  
+              <td>
+                <span class="id-badge">
+                  Product #{{ item.productId }}
+                </span>
+              </td>
+  
+              <td>
+                <span class="id-badge">
+                  Warehouse #{{ item.warehouseId }}
+                </span>
+              </td>
+  
+              <td>
+                <strong class="quantity">
+                  {{ item.quantity }}
+                </strong>
+              </td>
+  
+              <td>
+                {{ item.minimumStock }}
+              </td>
+  
+              <td>
+  
+                <span
+                  class="status"
+                  [class.low]="isLowStock(item)"
+                  [class.available]="!isLowStock(item)"
+                >
+                  {{ isLowStock(item)
+                    ? 'Low Stock'
+                    : 'Available'
+                  }}
+                </span>
+  
+              </td>
+  
+              <td>
+  
+                <div class="actions">
+  
+                  <button
+                    class="edit-button"
+                    (click)="openEditForm(item)"
+                  >
+                    Edit
+                  </button>
+  
+                  <button
+                    class="delete-button"
+                    (click)="deleteInventory(item.id)"
+                  >
+                    Delete
+                  </button>
+  
+                </div>
+  
+              </td>
+  
+            </tr>
+  
+          </tbody>
+  
+        </table>
+  
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  
+  <!-- ADD / EDIT MODAL -->
+  
+  <div
+    class="modal-overlay"
+    *ngIf="showForm"
+    (click)="closeForm()"
+  >
+  
+    <div
+      class="modal"
+      (click)="$event.stopPropagation()"
+    >
+  
+      <div class="modal-header">
+  
+        <div>
+  
+          <div class="eyebrow">
+            INVENTORY MANAGEMENT
+          </div>
+  
+          <h2>
+            {{ editing
+              ? 'Edit Inventory'
+              : 'Add Inventory'
+            }}
+          </h2>
+  
+        </div>
+  
+        <button
+          class="close-button"
+          (click)="closeForm()"
+        >
+          ×
+        </button>
+  
+      </div>
+  
+  
+      <form
+        (ngSubmit)="saveInventory()"
+      >
+  
+        <!-- PRODUCT ID -->
+  
+        <div class="form-group">
+  
+          <label>
+            Product ID *
+          </label>
+  
+          <input
+            type="number"
+            name="productId"
+            [(ngModel)]="inventoryForm.productId"
+            min="1"
+            placeholder="Enter product ID"
+            required
+          />
+  
+        </div>
+  
+  
+        <!-- WAREHOUSE ID -->
+  
+        <div class="form-group">
+  
+          <label>
+            Warehouse ID *
+          </label>
+  
+          <input
+            type="number"
+            name="warehouseId"
+            [(ngModel)]="inventoryForm.warehouseId"
+            min="1"
+            placeholder="Enter warehouse ID"
+            required
+          />
+  
+        </div>
+  
+  
+        <div class="form-row">
+  
+          <!-- QUANTITY -->
+  
+          <div class="form-group">
+  
+            <label>
+              Quantity *
+            </label>
+  
+            <input
+              type="number"
+              name="quantity"
+              [(ngModel)]="inventoryForm.quantity"
+              min="0"
+              required
+            />
+  
+          </div>
+  
+  
+          <!-- MINIMUM STOCK -->
+  
+          <div class="form-group">
+  
+            <label>
+              Minimum Stock *
+            </label>
+  
+            <input
+              type="number"
+              name="minimumStock"
+              [(ngModel)]="inventoryForm.minimumStock"
+              min="0"
+              required
+            />
+  
+          </div>
+  
+        </div>
+  
+  
+        <!-- ACTIONS -->
+  
+        <div class="modal-actions">
+  
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="closeForm()"
+          >
+            Cancel
+          </button>
+  
+          <button
+            type="submit"
+            class="save-button"
+          >
+            {{ editing
+              ? 'Update Inventory'
+              : 'Create Inventory'
+            }}
+          </button>
+  
+        </div>
+  
+      </form>
+  
+    </div>
+  
+  </div>

@@ -1,0 +1,63 @@
+/* Shared routed-page dark theme. This is global so it reaches standalone page components. */
+app-root .dark-mode .card,
+app-root .dark-mode .glass,
+app-root .dark-mode .glass-card,
+app-root .dark-mode .stat-card,
+app-root .dark-mode .chart-card,
+app-root .dark-mode .warehouse-card,
+app-root .dark-mode .orders-card,
+app-root .dark-mode .low-stock-card,
+app-root .dark-mode .quick-actions,
+app-root .dark-mode .modal,
+app-root .dark-mode .page-container > .card {
+  background: rgba(15, 23, 42, .76) !important;
+  border-color: rgba(255, 255, 255, .10) !important;
+  color: #e2e8f0 !important;
+}
+
+app-root .dark-mode .page-header h1,
+app-root .dark-mode .card h1,
+app-root .dark-mode .card h2,
+app-root .dark-mode .glass h2,
+app-root .dark-mode .glass h3,
+app-root .dark-mode th,
+app-root .dark-mode td,
+app-root .dark-mode strong { color: #f8fafc; }
+
+app-root .dark-mode p,
+app-root .dark-mode .card-header p,
+app-root .dark-mode .page-header p,
+app-root .dark-mode td,
+app-root .dark-mode .message { color: #a8b7d1; }
+
+app-root .dark-mode .table-container,
+app-root .dark-mode table,
+app-root .dark-mode tr,
+app-root .dark-mode .message,
+app-root .dark-mode .state-message { background: transparent; border-color: rgba(255,255,255,.10); }
+
+app-root .dark-mode input,
+app-root .dark-mode textarea,
+app-root .dark-mode select { background: rgba(30, 41, 59, .84) !important; color: #f8fafc !important; border-color: rgba(255,255,255,.12) !important; }
+
+app-root .dark-mode .modal-overlay { background: rgba(2, 6, 23, .72) !important; }
+app-root .dark-mode .grid-line { background: rgba(148, 163, 184, .25) !important; }
+app-root .dark-mode .chart-y span,
+app-root .dark-mode .chart-labels span { color: #94a3b8 !important; }
+
+app-root .notification-wrapper { position: relative; }
+app-root .notification-panel { position: absolute; right: 0; top: 47px; z-index: 100; width: min(330px, 82vw); padding: 10px; border: 1px solid rgba(148,163,184,.25); border-radius: 14px; background: rgba(255,255,255,.96); box-shadow: 0 18px 45px rgba(15,23,42,.18); }
+app-root .notification-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 5px 5px 10px; color: #172033; }
+app-root .notification-header button { border: 0; background: transparent; color: #4f46e5; cursor: pointer; font-size: 12px; font-weight: 700; }
+app-root .notification-empty, app-root .notification-item { margin: 0; padding: 10px; border-radius: 9px; color: #64748b; font-size: 12px; line-height: 1.4; }
+app-root .notification-item { margin-top: 5px; background: #eff6ff; color: #1e40af; }
+app-root .notification-item.warning { background: #fff7ed; color: #9a3412; }
+app-root .sign-out-button { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 13px; border: 0; border-radius: 11px; background: rgba(241,245,249,.7); color: #475569; cursor: pointer; font-size: 12px; font-weight: 700; transition: .2s ease; }
+app-root .sign-out-button:hover { background: #fee2e2; color: #b91c1c; transform: translateY(-1px); }
+app-root .dark-mode .notification-panel { background: rgba(15,23,42,.98); border-color: rgba(255,255,255,.1); }
+app-root .dark-mode .notification-header { color: #f8fafc; }
+app-root .dark-mode .notification-empty { color: #94a3b8; }
+app-root .dark-mode .notification-item { background: rgba(30,64,175,.25); color: #bfdbfe; }
+app-root .dark-mode .notification-item.warning { background: rgba(154,52,18,.25); color: #fed7aa; }
+app-root .dark-mode .sign-out-button { background: rgba(30,41,59,.8); color: #e2e8f0; }
+@media (max-width: 650px) { app-root .sign-out-button span { display: none; } app-root .sign-out-button { width: 40px; justify-content: center; padding: 0; } }

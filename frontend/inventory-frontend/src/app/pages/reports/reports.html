@@ -1,0 +1,96 @@
+<div class="page-container">
+
+    <div class="page-header">
+      <div>
+        <h1>Reports</h1>
+        <p>View inventory and business performance reports.</p>
+      </div>
+    </div>
+  
+  
+    <div class="report-grid">
+  
+      <div
+        class="report-card"
+        *ngFor="let report of reportCards"
+      >
+  
+        <div class="report-icon">
+          {{ report.icon }}
+        </div>
+  
+        <div class="report-content">
+  
+          <h2>
+            {{ report.title }}
+          </h2>
+  
+          <p>
+            {{ report.description }}
+          </p>
+  
+        </div>
+  
+        <button class="view-button" (click)="export(report.type)">
+          Export CSV →
+        </button>
+  
+      </div>
+  
+    </div>
+  
+  
+    <div class="glass-card summary-card">
+  
+      <div class="summary-header">
+  
+        <div>
+          <h2>Inventory Summary</h2>
+          <p>Quick overview of inventory operations.</p>
+        </div>
+  
+      </div>
+  
+  
+      <div class="summary-grid">
+  
+        <div class="summary-item">
+          <span class="summary-icon">📦</span>
+          <div>
+            <strong>Products</strong>
+            <small>{{ summary.products }} registered</small>
+          </div>
+        </div>
+  
+  
+        <div class="summary-item">
+          <span class="summary-icon">🏢</span>
+          <div>
+            <strong>Warehouses</strong>
+            <small>{{ summary.warehouses }} registered</small>
+          </div>
+        </div>
+  
+  
+        <div class="summary-item">
+          <span class="summary-icon">🔄</span>
+          <div>
+            <strong>Stock Transfers</strong>
+            <small>{{ summary.transfers }} inventory records</small>
+          </div>
+        </div>
+  
+  
+        <div class="summary-item">
+          <span class="summary-icon">🛒</span>
+          <div>
+            <strong>Orders</strong>
+            <small>{{ summary.orders }} recorded</small>
+          </div>
+        </div>
+  
+      </div>
+  
+    </div>
+  
+  </div>

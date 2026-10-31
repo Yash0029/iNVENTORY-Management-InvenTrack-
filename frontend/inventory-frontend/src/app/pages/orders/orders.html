@@ -1,0 +1,396 @@
+<div class="orders-page">
+
+    <div class="page-header">
+  
+      <div>
+        <div class="eyebrow">ORDER MANAGEMENT</div>
+  
+        <h1>Orders</h1>
+  
+        <p>
+          Manage customer orders and their status
+        </p>
+      </div>
+  
+      <button
+        class="add-button"
+        (click)="openAddForm()"
+      >
+        + Add Order
+      </button>
+  
+    </div>
+  
+  
+    <div class="card">
+  
+      <div class="card-header">
+  
+        <div>
+          <h2>Order Directory</h2>
+  
+          <p>
+            All customer orders registered in your system
+          </p>
+        </div>
+  
+        <button
+          class="small-add-button"
+          (click)="openAddForm()"
+        >
+          + New Order
+        </button>
+  
+      </div>
+  
+  
+      <!-- LOADING -->
+  
+      <div
+        *ngIf="loading"
+        class="message"
+      >
+  
+        <div class="loader"></div>
+  
+        <p>Loading orders...</p>
+  
+      </div>
+  
+  
+      <!-- ERROR -->
+  
+      <div
+        *ngIf="!loading && error"
+        class="error"
+      >
+        {{ error }}
+      </div>
+  
+  
+      <!-- EMPTY -->
+  
+      <div
+        *ngIf="
+          !loading &&
+          !error &&
+          orders.length === 0
+        "
+        class="message"
+      >
+  
+        <div class="empty-icon">
+          ▱
+        </div>
+  
+        <h3>No orders yet</h3>
+  
+        <p>
+          Add your first customer order.
+        </p>
+  
+        <button
+          class="small-add-button"
+          (click)="openAddForm()"
+        >
+          + Add Order
+        </button>
+  
+      </div>
+  
+  
+      <!-- TABLE -->
+  
+      <div
+        class="table-container"
+        *ngIf="
+          !loading &&
+          !error &&
+          orders.length > 0
+        "
+      >
+  
+        <table>
+  
+          <thead>
+  
+            <tr>
+              <th>ID</th>
+              <th>CUSTOMER</th>
+              <th>EMAIL</th>
+              <th>PHONE</th>
+              <th>AMOUNT</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
+            </tr>
+  
+          </thead>
+  
+          <tbody>
+  
+            <tr
+              *ngFor="let order of orders"
+            >
+  
+              <td>
+                #ORD-{{ order.id }}
+              </td>
+  
+              <td>
+  
+                <div class="customer-name">
+  
+                  <div class="customer-icon">
+                    ◉
+                  </div>
+  
+                  <strong>
+                    {{ order.customerName }}
+                  </strong>
+  
+                </div>
+  
+              </td>
+  
+              <td>
+                {{ order.customerEmail || '—' }}
+              </td>
+  
+              <td>
+                {{ order.customerPhone || '—' }}
+              </td>
+  
+              <td>
+                ₹{{ order.totalAmount | number:'1.2-2' }}
+              </td>
+  
+              <td>
+  
+                <span
+                  class="status"
+                  [ngClass]="getStatusClass(order.status)"
+                >
+                  {{ order.status }}
+                </span>
+  
+              </td>
+  
+              <td>
+  
+                <div class="actions">
+  
+                  <button
+                    class="edit-button"
+                    (click)="openEditForm(order)"
+                  >
+                    Edit
+                  </button>
+  
+                  <button
+                    class="delete-button"
+                    (click)="deleteOrder(order.id)"
+                  >
+                    Delete
+                  </button>
+  
+                </div>
+  
+              </td>
+  
+            </tr>
+  
+          </tbody>
+  
+        </table>
+  
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  
+  <!-- ADD / EDIT MODAL -->
+  
+  <div
+    class="modal-overlay"
+    *ngIf="showForm"
+    (click)="closeForm()"
+  >
+  
+    <div
+      class="modal"
+      (click)="$event.stopPropagation()"
+    >
+  
+      <div class="modal-header">
+  
+        <div>
+  
+          <div class="eyebrow">
+            ORDER MANAGEMENT
+          </div>
+  
+          <h2>
+            {{ editing
+              ? 'Edit Order'
+              : 'Add Order'
+            }}
+          </h2>
+  
+        </div>
+  
+        <button
+          class="close-button"
+          type="button"
+          (click)="closeForm()"
+        >
+          ×
+        </button>
+  
+      </div>
+  
+  
+      <form
+        (ngSubmit)="saveOrder()"
+      >
+  
+        <div class="form-group">
+  
+          <label>
+            Customer Name *
+          </label>
+  
+          <input
+            type="text"
+            name="customerName"
+            [(ngModel)]="order.customerName"
+            placeholder="Enter customer name"
+            required
+          />
+  
+        </div>
+  
+  
+        <div class="form-row">
+  
+          <div class="form-group">
+  
+            <label>
+              Email
+            </label>
+  
+            <input
+              type="email"
+              name="customerEmail"
+              [(ngModel)]="order.customerEmail"
+              placeholder="customer@example.com"
+            />
+  
+          </div>
+  
+  
+          <div class="form-group">
+  
+            <label>
+              Phone
+            </label>
+  
+            <input
+              type="tel"
+              name="customerPhone"
+              [(ngModel)]="order.customerPhone"
+              placeholder="Enter phone number"
+            />
+  
+          </div>
+  
+        </div>
+  
+  
+        <div class="form-row">
+  
+          <div class="form-group">
+  
+            <label>
+              Total Amount *
+            </label>
+  
+            <input
+              type="number"
+              name="totalAmount"
+              [(ngModel)]="order.totalAmount"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              required
+            />
+  
+          </div>
+  
+  
+          <div class="form-group">
+  
+            <label>
+              Status
+            </label>
+  
+            <select
+              name="status"
+              [(ngModel)]="order.status"
+            >
+  
+              <option value="Pending">
+                Pending
+              </option>
+  
+              <option value="Processing">
+                Processing
+              </option>
+  
+              <option value="Shipped">
+                Shipped
+              </option>
+  
+              <option value="Delivered">
+                Delivered
+              </option>
+  
+              <option value="Cancelled">
+                Cancelled
+              </option>
+  
+            </select>
+  
+          </div>
+  
+        </div>
+  
+  
+        <div class="modal-actions">
+  
+          <button
+            type="button"
+            class="cancel-button"
+            (click)="closeForm()"
+          >
+            Cancel
+          </button>
+  
+          <button
+            type="submit"
+            class="save-button"
+          >
+            {{ editing
+              ? 'Update Order'
+              : 'Create Order'
+            }}
+          </button>
+  
+        </div>
+  
+      </form>
+  
+    </div>
+  
+  </div>

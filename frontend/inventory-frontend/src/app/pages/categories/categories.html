@@ -1,0 +1,296 @@
+<div class="categories-page">
+
+  <div class="page-header">
+
+    <div>
+      <div class="eyebrow">
+        CATALOG MANAGEMENT
+      </div>
+
+      <h1>Categories</h1>
+
+      <p>
+        Organize your products into categories
+      </p>
+    </div>
+
+    <button
+      class="add-button"
+      (click)="openAddForm()"
+    >
+      + Add Category
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>Product Categories</h2>
+
+        <p>
+          Manage all categories in your catalog
+        </p>
+      </div>
+
+      <button
+        class="small-add-button"
+        (click)="openAddForm()"
+      >
+        + New Category
+      </button>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      *ngIf="loading"
+      class="message"
+    >
+
+      <div class="loader"></div>
+
+      <p>Loading categories...</p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      *ngIf="!loading && error"
+      class="error"
+    >
+      {{ error }}
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      *ngIf="
+        !loading &&
+        !error &&
+        categories.length === 0
+      "
+      class="message"
+    >
+
+      <div class="empty-icon">
+        ◇
+      </div>
+
+      <h3>No categories yet</h3>
+
+      <p>
+        Create your first product category.
+      </p>
+
+      <button
+        class="small-add-button"
+        (click)="openAddForm()"
+      >
+        + Add Category
+      </button>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div
+      class="table-container"
+      *ngIf="
+        !loading &&
+        !error &&
+        categories.length > 0
+      "
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>ID</th>
+            <th>CATEGORY</th>
+            <th>DESCRIPTION</th>
+            <th>ACTIONS</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let category of categories"
+          >
+
+            <td>
+              #{{ category.id }}
+            </td>
+
+            <td>
+
+              <div class="category-name">
+
+                <div class="category-icon">
+                  ◇
+                </div>
+
+                <strong>
+                  {{ category.name }}
+                </strong>
+
+              </div>
+
+            </td>
+
+            <td>
+              {{ category.description || '—' }}
+            </td>
+
+            <td>
+
+              <div class="actions">
+
+                <button
+                  class="edit-button"
+                  (click)="openEditForm(category)"
+                >
+                  Edit
+                </button>
+
+                <button
+                  class="delete-button"
+                  (click)="deleteCategory(category.id)"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showForm"
+  (click)="closeForm()"
+>
+
+  <div
+    class="modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <div class="eyebrow">
+          CATEGORY MANAGEMENT
+        </div>
+
+        <h2>
+          {{ editing
+            ? 'Edit Category'
+            : 'Add Category'
+          }}
+        </h2>
+
+      </div>
+
+      <button
+        class="close-button"
+        (click)="closeForm()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form
+      (ngSubmit)="saveCategory()"
+    >
+
+      <div class="form-group">
+
+        <label>
+          Category Name *
+        </label>
+
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="category.name"
+          placeholder="Enter category name"
+          required
+        />
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Description
+        </label>
+
+        <textarea
+          name="description"
+          [(ngModel)]="category.description"
+          placeholder="Enter category description"
+          rows="4"
+        ></textarea>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeForm()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+        >
+          {{ editing
+            ? 'Update Category'
+            : 'Create Category'
+          }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

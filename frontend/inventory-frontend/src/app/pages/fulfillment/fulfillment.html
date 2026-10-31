@@ -1,0 +1,244 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <div>
+      <h1>Fulfillment</h1>
+      <p>Manage order fulfillment and assignments.</p>
+    </div>
+
+    <button class="primary-button" (click)="openAddForm()">
+      + New Fulfillment
+    </button>
+  </div>
+
+
+  <div class="glass-card table-card">
+
+    <div *ngIf="loading" class="state-message">
+      Loading fulfillments...
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+
+    <div
+      *ngIf="!loading && !error && fulfillments.length === 0"
+      class="state-message"
+    >
+      No fulfillment records found.
+    </div>
+
+    <div
+      *ngIf="!loading && fulfillments.length > 0"
+      class="table-wrapper"
+    >
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Order ID</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let item of fulfillments">
+
+            <td>
+              #{{ item.id }}
+            </td>
+
+            <td>
+              <span class="id-badge">
+                Order #{{ item.orderId }}
+              </span>
+            </td>
+
+            <td>
+              {{ item.assignedTo }}
+            </td>
+
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(item.status)"
+              >
+                {{ item.status }}
+              </span>
+            </td>
+
+            <td>
+              <div class="action-buttons">
+
+                <button
+                  class="edit-button"
+                  (click)="openEditForm(item)"
+                >
+                  Edit
+                </button>
+
+                <button
+                  class="delete-button"
+                  (click)="deleteFulfillment(item.id)"
+                >
+                  Delete
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showForm"
+  (click)="closeForm()"
+>
+
+  <div
+    class="modal-card"
+    (click)="$event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          {{
+            editing
+              ? 'Edit Fulfillment'
+              : 'New Fulfillment'
+          }}
+        </h2>
+
+        <p>
+          {{
+            editing
+              ? 'Update fulfillment details.'
+              : 'Create a fulfillment record.'
+          }}
+        </p>
+
+      </div>
+
+      <button
+        class="close-button"
+        (click)="closeForm()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label>Order ID</label>
+
+        <input
+          type="number"
+          [(ngModel)]="fulfillment.orderId"
+          min="1"
+          placeholder="Enter order ID"
+        />
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Assigned To</label>
+
+        <input
+          type="text"
+          [(ngModel)]="fulfillment.assignedTo"
+          placeholder="Enter employee name"
+        />
+
+      </div>
+
+
+      <div class="form-group full-width">
+
+        <label>Status</label>
+
+        <select
+          [(ngModel)]="fulfillment.status"
+        >
+
+          <option value="Pending">
+            Pending
+          </option>
+
+          <option value="Processing">
+            Processing
+          </option>
+
+          <option value="Packed">
+            Packed
+          </option>
+
+          <option value="Ready">
+            Ready
+          </option>
+
+          <option value="Completed">
+            Completed
+          </option>
+
+          <option value="Cancelled">
+            Cancelled
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary-button"
+        (click)="closeForm()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="primary-button"
+        (click)="saveFulfillment()"
+      >
+        {{
+          editing
+            ? 'Update Fulfillment'
+            : 'Create Fulfillment'
+        }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

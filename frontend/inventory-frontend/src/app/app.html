@@ -1,0 +1,298 @@
+<router-outlet *ngIf="isLoginPage"></router-outlet>
+
+<div *ngIf="!isLoginPage"
+  class="app-shell"
+  [class.sidebar-collapsed]="sidebarCollapsed"
+  [class.dark-mode]="darkMode"
+>
+
+  <!-- ==================== SIDEBAR ==================== -->
+
+  <aside
+    class="sidebar"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+      <div class="brand-logo">
+        I
+      </div>
+
+      <div class="brand-text">
+        <strong>InvenTrack</strong>
+        <span>Retail Inventory</span>
+      </div>
+
+      <!-- Sidebar collapse button -->
+
+      <button
+        class="sidebar-toggle"
+        (click)="toggleSidebar(); $event.stopPropagation()"
+        [title]="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+      >
+        {{ sidebarCollapsed ? '›' : '‹' }}
+      </button>
+
+    </div>
+
+
+    <!-- ==================== MAIN MENU ==================== -->
+
+    <div class="nav-section">
+
+      <span class="nav-title">
+        MAIN MENU
+      </span>
+
+
+      <!-- Dashboard -->
+
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <span class="nav-icon">⌂</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+
+
+    </div>
+
+
+    <!-- ==================== OPERATIONS ==================== -->
+
+    <div class="nav-section">
+
+      <span class="nav-title">
+        OPERATIONS
+      </span>
+
+
+      <!-- Inventory -->
+
+      <a
+        routerLink="/inventory"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <span class="nav-icon">▤</span>
+        <span class="nav-label">Inventory</span>
+      </a>
+
+      
+
+
+      <!-- Stock Transfers -->
+
+      <a
+      routerLink="/stock-transfers"
+      routerLinkActive="active"
+      class="nav-item"
+    >
+      <span class="nav-icon">⇄</span>
+      <span class="nav-label">Stock Transfers</span>
+    </a>
+
+
+      <!-- Orders -->
+
+      <a
+  routerLink="/orders"
+  routerLinkActive="active"
+  class="nav-item"
+>
+  <span class="nav-icon">▱</span>
+
+  <span class="nav-label">
+    Orders
+  </span>
+</a>
+
+      <a routerLink="/reports" routerLinkActive="active" class="nav-item"><span class="nav-icon">▥</span><span class="nav-label">Reports</span></a>
+
+<a
+routerLink="/fulfillment"
+routerLinkActive="active"
+class="nav-item"
+>
+<span class="nav-icon">✓</span>
+<span class="nav-label">Fulfillment</span>
+</a>
+
+    </div>
+
+
+    <!-- ==================== MANAGEMENT ==================== -->
+
+    <div class="nav-section">
+
+      <span class="nav-title">
+        MANAGEMENT
+      </span>
+
+
+      <a routerLink="/products" routerLinkActive="active" class="nav-item"><span class="nav-icon">▣</span><span class="nav-label">Products</span></a>
+      <a routerLink="/categories" routerLinkActive="active" class="nav-item"><span class="nav-icon">◇</span><span class="nav-label">Categories</span></a>
+      <a routerLink="/suppliers" routerLinkActive="active" class="nav-item"><span class="nav-icon">♙</span><span class="nav-label">Suppliers</span></a>
+      <a routerLink="/warehouses" routerLinkActive="active" class="nav-item"><span class="nav-icon">⌂</span><span class="nav-label">Warehouses</span></a>
+
+
+    </div>
+
+
+    <!-- ==================== SIDEBAR USER ==================== -->
+
+    <div class="sidebar-bottom">
+
+      <div class="mini-user">
+
+        <div class="user-avatar">
+          {{ initials }}
+        </div>
+
+        <div class="user-info">
+
+          <strong>
+            {{ currentUser?.name }}
+          </strong>
+
+          <span>
+            {{ currentUser?.role }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ==================== MAIN AREA ==================== -->
+
+  <main
+  class="main-area"
+  (click)="closePanels()"
+>
+
+    <!-- ==================== TOPBAR ==================== -->
+
+    <header
+      class="topbar glass"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Sidebar menu button -->
+
+      <button
+        class="menu-button"
+        (click)="toggleSidebar(); $event.stopPropagation()"
+        [title]="sidebarCollapsed ? 'Open sidebar' : 'Close sidebar'"
+      >
+        {{ sidebarCollapsed ? '☰' : '×' }}
+      </button>
+
+
+      <!-- Search -->
+
+      <div class="search-wrapper">
+      <div class="search-box">
+
+        <span>
+          ⌕
+        </span>
+
+        <input
+          type="text"
+          placeholder="Search anything..."
+          [(ngModel)]="searchTerm"
+        />
+
+        <kbd>
+          ⌘ K
+        </kbd>
+
+      </div>
+      <div class="search-results" *ngIf="searchResults.length"><button *ngFor="let item of searchResults" (click)="openSearchResult(item.route)">{{ item.label }}</button></div>
+      </div>
+
+
+      <!-- ==================== TOP ACTIONS ==================== -->
+
+      <div class="top-actions">
+
+        <!-- Theme -->
+
+        <button
+          class="top-button"
+          (click)="toggleTheme(); $event.stopPropagation()"
+          title="Toggle theme"
+        >
+          {{ darkMode ? '☀' : '☾' }}
+        </button>
+
+
+        <!-- Notifications -->
+
+        <div class="notification-wrapper" (click)="$event.stopPropagation()">
+        <button
+          class="top-button notification"
+          (click)="toggleNotifications()"
+          title="Notifications"
+        >
+          ♧
+          <span *ngIf="hasUnreadNotifications"></span>
+        </button>
+        <div class="notification-panel" *ngIf="notificationsOpen">
+          <div class="notification-header"><strong>Notifications</strong><button *ngIf="notifications.length" (click)="markNotificationsRead()">Mark all as read</button></div>
+          <p class="notification-empty" *ngIf="!notifications.length">You’re all caught up.</p>
+          <div class="notification-item" *ngFor="let notification of notifications" [class.warning]="notification.type === 'warning'">{{ notification.message }}</div>
+        </div>
+        </div>
+
+
+        <!-- User -->
+
+        <div class="top-user">
+
+          <div class="top-avatar">
+            {{ initials }}
+          </div>
+
+          <div class="top-user-info">
+
+            <strong>
+              {{ currentUser?.name }}
+            </strong>
+
+            <span>
+              {{ currentUser?.role }}
+            </span>
+
+          </div>
+
+        </div>
+
+        <button class="sign-out-button" (click)="logout()" title="Sign out of InvenTrack">⇥ <span>Sign Out</span></button>
+
+      </div>
+
+    </header>
+
+
+    <!-- ==================== PAGE CONTENT ==================== -->
+
+    <section class="page-container">
+
+      <router-outlet></router-outlet>
+
+    </section>
+
+  </main>
+
+</div>

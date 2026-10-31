@@ -1,0 +1,379 @@
+<div class="products-page">
+
+  <!-- HEADER -->
+
+  <div class="page-header">
+
+    <div>
+      <div class="eyebrow">
+        INVENTORY MANAGEMENT
+      </div>
+
+      <h1>Products</h1>
+
+      <p>
+        Manage your retail product catalog
+      </p>
+    </div>
+
+    <button
+      class="add-button"
+      (click)="openAddForm()"
+    >
+      + Add Product
+    </button>
+
+  </div>
+
+
+  <!-- PRODUCT CARD -->
+
+  <div class="card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>Product Catalog</h2>
+
+        <p>
+          All products registered in your system
+        </p>
+      </div>
+
+      <button
+        class="small-add-button"
+        (click)="openAddForm()"
+      >
+        + New Product
+      </button>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      *ngIf="loading"
+      class="message"
+    >
+
+      <div class="loader"></div>
+
+      <p>Loading products...</p>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      *ngIf="!loading && error"
+      class="error"
+    >
+      {{ error }}
+    </div>
+
+
+    <!-- EMPTY -->
+
+    <div
+      *ngIf="
+        !loading &&
+        !error &&
+        products.length === 0
+      "
+      class="message"
+    >
+
+      <div class="empty-icon">
+        📦
+      </div>
+
+      <h3>No products yet</h3>
+
+      <p>
+        Add your first product to the inventory.
+      </p>
+
+      <button
+        class="small-add-button"
+        (click)="openAddForm()"
+      >
+        + Add First Product
+      </button>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div
+      class="table-container"
+      *ngIf="
+        !loading &&
+        !error &&
+        products.length > 0
+      "
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>PRODUCT</th>
+
+            <th>SKU</th>
+
+            <th>DESCRIPTION</th>
+
+            <th>PRICE</th>
+
+            <th>MIN STOCK</th>
+
+            <th>ACTIONS</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let product of products"
+          >
+
+            <td>
+              #{{ product.id }}
+            </td>
+
+            <td>
+
+              <div class="product-name">
+
+                <div class="product-icon">
+                  📦
+                </div>
+
+                <strong>
+                  {{ product.name }}
+                </strong>
+
+              </div>
+
+            </td>
+
+            <td>
+              <span class="sku">
+                {{ product.sku }}
+              </span>
+            </td>
+
+            <td>
+              {{ product.description || '—' }}
+            </td>
+
+            <td>
+              <strong>
+                ₹{{ product.price }}
+              </strong>
+            </td>
+
+            <td>
+              {{ product.minimumStock }}
+            </td>
+
+            <td>
+
+              <div class="actions">
+
+                <button
+                  class="edit-button"
+                  (click)="openEditForm(product)"
+                  [disabled]="!canManageProducts"
+                  [title]="canManageProducts ? 'Edit product' : 'Viewer accounts are read-only'"
+                >
+                  Edit
+                </button>
+
+                <button
+                  class="delete-button"
+                  (click)="deleteProduct(product.id)"
+                  [disabled]="!canManageProducts"
+                  [title]="canManageProducts ? 'Delete product' : 'Viewer accounts are read-only'"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT MODAL -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showForm"
+  (click)="closeForm()"
+>
+
+  <div
+    class="modal"
+    (click)="$event.stopPropagation()"
+  >
+
+    <div class="modal-header">
+
+      <div>
+
+        <div class="eyebrow">
+          PRODUCT MANAGEMENT
+        </div>
+
+        <h2>
+          {{ editing ? 'Edit Product' : 'Add Product' }}
+        </h2>
+
+      </div>
+
+      <button
+        class="close-button"
+        (click)="closeForm()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form
+      (ngSubmit)="saveProduct()"
+    >
+
+      <div class="form-group">
+
+        <label>
+          Product Name *
+        </label>
+
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="product.name"
+          placeholder="Enter product name"
+          required
+        />
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            SKU *
+          </label>
+
+          <input
+            type="text"
+            name="sku"
+            [(ngModel)]="product.sku"
+            placeholder="e.g. WM-001"
+            required
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Price *
+          </label>
+
+          <input
+            type="number"
+            name="price"
+            [(ngModel)]="product.price"
+            min="0"
+            required
+          />
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Minimum Stock
+        </label>
+
+        <input
+          type="number"
+          name="minimumStock"
+          [(ngModel)]="product.minimumStock"
+          min="0"
+        />
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Description
+        </label>
+
+        <textarea
+          name="description"
+          [(ngModel)]="product.description"
+          placeholder="Enter product description"
+          rows="4"
+        ></textarea>
+
+      </div>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeForm()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-button"
+        >
+          {{ editing ? 'Update Product' : 'Create Product' }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

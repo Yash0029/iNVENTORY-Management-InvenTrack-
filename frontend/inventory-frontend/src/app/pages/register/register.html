@@ -1,0 +1,11 @@
+<div class="login-page"><div class="login-background"><div class="glow glow-one"></div><div class="glow glow-two"></div></div>
+  <div class="login-card register-card"><div class="login-brand"><div class="brand-logo">I</div><div><h1>InvenTrack</h1><p>Retail Inventory</p></div></div>
+    <div class="login-heading"><h2>Create your account</h2><p>Set up your secure InvenTrack workspace access.</p></div>
+    <form (ngSubmit)="register()"><div class="form-group"><label for="name">Full name</label><input id="name" name="name" [(ngModel)]="name" autocomplete="name" placeholder="Your full name"></div>
+      <div class="form-group"><label for="email">Email</label><input id="email" type="email" name="email" [(ngModel)]="email" autocomplete="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label for="role">Role</label><select id="role" name="role" [(ngModel)]="role"><option *ngFor="let option of roles" [value]="option">{{ option.replaceAll('_', ' ') }}</option></select></div>
+      <div class="form-group"><label for="password">Password</label><input id="password" type="password" name="password" [(ngModel)]="password" autocomplete="new-password" placeholder="At least 8 characters"></div>
+      <div class="form-group"><label for="confirm-password">Confirm password</label><input id="confirm-password" type="password" name="confirmPassword" [(ngModel)]="confirmPassword" autocomplete="new-password" placeholder="Repeat your password"></div>
+      <div *ngIf="error" class="error-message">{{ error }}</div><div *ngIf="success" class="success-message">{{ success }}</div>
+      <button type="submit" class="login-button" [disabled]="loading">{{ loading ? 'Creating account…' : 'Create Account' }}</button></form>
+    <p class="auth-switch">Already have an account? <a routerLink="/login">Sign in</a></p></div></div>
